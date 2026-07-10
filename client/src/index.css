@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-ink-900 text-slate-100 font-sans antialiased;
+    background-image:
+      radial-gradient(60rem 40rem at 80% -10%, rgba(255, 45, 120, 0.10), transparent 60%),
+      radial-gradient(50rem 40rem at 10% 0%, rgba(56, 189, 248, 0.08), transparent 55%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-ember/40 text-white;
+  }
+  /* Slim scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2a3048 transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #2a3048;
+    border-radius: 9999px;
+  }
+}
+
+@layer components {
+  .ff-card {
+    @apply rounded-2xl border border-ink-border bg-ink-card/70 backdrop-blur-sm shadow-card;
+  }
+  .ff-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink-border bg-ink-800/80 px-2.5 py-1 text-xs font-medium text-ink-muted;
+  }
+  .ff-pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .ff-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-ember/60 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .ff-btn-primary {
+    @apply ff-btn bg-gradient-to-r from-ember to-hot text-white shadow-glow hover:brightness-110;
+  }
+  .ff-btn-ghost {
+    @apply ff-btn border border-ink-border bg-ink-800/60 text-slate-200 hover:border-ember/50 hover:text-white;
+  }
+  .ff-input {
+    @apply w-full rounded-xl border border-ink-border bg-ink-800/70 px-4 py-2.5 text-sm text-slate-100
+      placeholder:text-ink-faint focus:border-ember/60 focus:outline-none focus:ring-2 focus:ring-ember/20;
+  }
+  .ff-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-ink-faint;
+  }
+  .gradient-text {
+    @apply bg-gradient-to-r from-ember via-hot to-violet bg-clip-text text-transparent;
+  }
+  .ff-nav-link {
+    @apply rounded-lg px-3 py-2 text-sm font-medium text-ink-muted transition hover:text-white hover:bg-ink-700;
+  }
+  .ff-nav-link-active {
+    @apply bg-ink-700 text-white;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
