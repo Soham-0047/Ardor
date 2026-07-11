@@ -29,22 +29,26 @@ export const env = {
   geminiApiKey: process.env.GEMINI_API_KEY || '',
   geminiModel: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 
-  // Algolia
-  algoliaAppId: process.env.ALGOLIA_APP_ID || '',
-  algoliaAdminKey: process.env.ALGOLIA_ADMIN_KEY || '',
-  algoliaSearchKey: process.env.ALGOLIA_SEARCH_KEY || '',
-  algoliaIndex: process.env.ALGOLIA_INDEX || 'fanforge_moments',
+  // Snowflake (passion warehouse, flagged)
+  featureSnowflake: bool(process.env.FEATURE_SNOWFLAKE, true),
+  snowflakeAccount: process.env.SNOWFLAKE_ACCOUNT || '',
+  snowflakeUsername: process.env.SNOWFLAKE_USERNAME || '',
+  snowflakePassword: process.env.SNOWFLAKE_PASSWORD || '',
+  snowflakeDatabase: process.env.SNOWFLAKE_DATABASE || 'FANFORGE',
+  snowflakeSchema: process.env.SNOWFLAKE_SCHEMA || 'PUBLIC',
+  snowflakeWarehouse: process.env.SNOWFLAKE_WAREHOUSE || 'COMPUTE_WH',
+  snowflakeTable: process.env.SNOWFLAKE_TABLE || 'PASSION_MOMENTS',
 
   // football-data.org
   footballDataApiKey: process.env.FOOTBALL_DATA_API_KEY || '',
 
-  // ElevenLabs (bonus, flagged)
-  featureElevenLabs: bool(process.env.FEATURE_ELEVENLABS, false),
+  // ElevenLabs (flagged)
+  featureElevenLabs: bool(process.env.FEATURE_ELEVENLABS, true),
   elevenLabsApiKey: process.env.ELEVENLABS_API_KEY || '',
   elevenLabsVoiceId: process.env.ELEVENLABS_VOICE_ID || '',
 
-  // Solana (stretch, flagged)
-  featureSolana: bool(process.env.FEATURE_SOLANA, false),
+  // Solana (flagged)
+  featureSolana: bool(process.env.FEATURE_SOLANA, true),
   solanaRpc: process.env.SOLANA_RPC || 'https://api.devnet.solana.com',
   solanaMintSecret: process.env.SOLANA_MINT_SECRET || '',
 
@@ -58,7 +62,9 @@ export const env = {
  */
 export const flags: FeatureFlags = {
   gemini: Boolean(env.geminiApiKey),
-  algolia: Boolean(env.algoliaAppId && env.algoliaAdminKey),
+  snowflake:
+    env.featureSnowflake &&
+    Boolean(env.snowflakeAccount && env.snowflakeUsername && env.snowflakePassword),
   elevenlabs: env.featureElevenLabs && Boolean(env.elevenLabsApiKey),
   solana: env.featureSolana && Boolean(env.solanaMintSecret),
   footballData: Boolean(env.footballDataApiKey),

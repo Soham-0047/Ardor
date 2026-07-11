@@ -47,7 +47,7 @@ const EventSchema = new Schema(
   { timestamps: true },
 );
 
-// Full-text index powers the Mongo search fallback when Algolia is absent.
+// Full-text index powers the instant passion-ranked search endpoint.
 EventSchema.index({ title: 'text', rawText: 'text', 'score.one_line_recap': 'text' });
 // Common feed/trend access patterns.
 EventSchema.index({ domain: 1, occurredAt: -1 });
