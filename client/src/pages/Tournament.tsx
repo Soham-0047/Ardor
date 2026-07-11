@@ -5,6 +5,7 @@ import FanJoin from '../components/FanJoin';
 import Leaderboard from '../components/Leaderboard';
 import TournamentBracket from '../components/TournamentBracket';
 import { ErrorNote } from '../components/ui';
+import { TrophyArt } from '../components/SportsArt';
 
 function shortMint(mint: string): string {
   if (!mint) return '—';
@@ -44,15 +45,18 @@ export default function TournamentPage() {
   return (
     <div className="space-y-6">
       {/* Hero */}
-      <header className="animate-rise">
-        <h1 className="font-display text-3xl font-bold text-white sm:text-4xl">
-          The <span className="gradient-text">Hype-Off</span> Arena
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm text-ink-muted sm:text-base">
-          Fan-vs-fan voting on the moments that made you scream. Every vote is
-          tournament-linked and stacks <span className="font-semibold text-ember-soft">Passion
-          Points</span> — keep a daily streak alive to multiply them and mint badges for the loudest fans.
-        </p>
+      <header className="animate-rise relative flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-strong sm:text-4xl">
+            The <span className="gradient-text">Hype-Off</span> Arena
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-ink-muted sm:text-base">
+            Fan-vs-fan voting on the moments that made you scream. Every vote is
+            tournament-linked and stacks <span className="font-semibold text-ember-soft">Passion
+            Points</span> — keep a daily streak alive to multiply them and mint badges for the loudest fans.
+          </p>
+        </div>
+        <TrophyArt size={88} className="hidden shrink-0 sm:block" />
       </header>
 
       {/* Join / identity */}
@@ -62,7 +66,7 @@ export default function TournamentPage() {
       {user && (
         <section className="ff-card p-5 animate-rise">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-display text-xl font-bold text-white">Your fan card</h2>
+            <h2 className="font-display text-xl font-bold text-strong">Your fan card</h2>
             <button
               type="button"
               className="ff-btn-ghost px-3 py-1.5 text-xs"
@@ -74,9 +78,9 @@ export default function TournamentPage() {
           </div>
 
           <div className="mt-4 grid grid-cols-3 gap-3">
-            <StatBlock label="Passion Pts" value={user.passionPoints} color="#ff5a3c" />
-            <StatBlock label="Streak" value={`${user.streak}🔥`} color="#fbbf24" />
-            <StatBlock label="Votes cast" value={user.votesCast} color="#38bdf8" />
+            <StatBlock label="Passion Pts" value={user.passionPoints} color="rgb(var(--c-ember))" />
+            <StatBlock label="Streak" value={`${user.streak}🔥`} color="rgb(var(--c-gold))" />
+            <StatBlock label="Votes cast" value={user.votesCast} color="rgb(var(--c-cool))" />
           </div>
 
           {mintError && (

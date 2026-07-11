@@ -45,6 +45,9 @@ async function bootstrap() {
     res.status(500).json({ error: message });
   });
 
+  // Make sure indexes (incl. the text-search index) exist before first query.
+  await EventModel.init();
+
   // First run: auto-ingest the seeded/live data so the dashboard has content.
   const count = await EventModel.countDocuments();
   if (count === 0) {
@@ -67,11 +70,21 @@ async function bootstrap() {
   app.listen(env.port, () => {
     log.info(`FanForge API listening on http://localhost:${env.port}`);
     log.info(
-      `integrations — gemini:${flags.gemini} algolia:${flags.algolia} ` +
+      `integrations — gemini:${flags.gemini} snowflake:${flags.snowflake} ` +
         `elevenlabs:${flags.elevenlabs} solana:${flags.solana} ` +
         `footballData:${flags.footballData} memoryDb:${db.memory}`,
     );
     void PUBLIC_DIR;
+  });
+}
+
+// Graceful shutdown: stop the in-memory mongod (if any) and close connections.
+for (const signal of ['SIGINT', 'SIGTERM'] as const) {
+  process.on(signal, () => {
+    log.info(`${signal} received — shutting down`);
+    void import('./config/db')
+      .then(({ disconnectDb }) => disconnectDb())
+      .finally(() => process.exit(0));
   });
 }
 

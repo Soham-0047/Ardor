@@ -94,7 +94,7 @@ export interface ScoredEvent extends RawEvent {
 /** Runtime feature flags exposed to the client via GET /api/config. */
 export interface FeatureFlags {
   gemini: boolean;
-  algolia: boolean;
+  snowflake: boolean;
   elevenlabs: boolean;
   solana: boolean;
   footballData: boolean;
