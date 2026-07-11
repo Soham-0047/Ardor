@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+client/dist
+server/public/audio
+.git
+.github
+.claude
+*.md
+.env
+**/.env
+.DS_Store

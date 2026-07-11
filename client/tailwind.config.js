@@ -1,28 +1,36 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
+      // Every color is a CSS variable (RGB triplet) defined in index.css, with
+      // light values on :root and dark values on .dark — so the whole app
+      // themes by flipping one class. <alpha-value> keeps /50-style modifiers.
       colors: {
         ink: {
-          900: '#08090f',
-          800: '#0c0e17',
-          700: '#12152130',
-          card: '#151827',
-          border: '#242a3d',
-          muted: '#8b93ad',
-          faint: '#5b6178',
+          900: 'rgb(var(--ink-900) / <alpha-value>)', // page background
+          800: 'rgb(var(--ink-800) / <alpha-value>)', // inputs / chips
+          700: 'rgb(var(--ink-700) / <alpha-value>)', // hover / active fills
+          card: 'rgb(var(--ink-card) / <alpha-value>)',
+          border: 'rgb(var(--ink-border) / <alpha-value>)',
+          muted: 'rgb(var(--ink-muted) / <alpha-value>)', // secondary text
+          faint: 'rgb(var(--ink-faint) / <alpha-value>)', // labels / timestamps
         },
+        fg: 'rgb(var(--fg) / <alpha-value>)', // primary body text
+        strong: 'rgb(var(--fg-strong) / <alpha-value>)', // headings / emphasis
+        danger: 'rgb(var(--c-danger) / <alpha-value>)',
+        'on-accent': 'rgb(var(--c-on-accent) / <alpha-value>)', // ink on filled accents
         ember: {
-          DEFAULT: '#ff5a3c',
-          soft: '#ff7a5c',
-          deep: '#e23c22',
+          DEFAULT: 'rgb(var(--c-ember) / <alpha-value>)', // brand volt
+          soft: 'rgb(var(--c-ember-soft) / <alpha-value>)',
+          deep: 'rgb(var(--c-ember-deep) / <alpha-value>)',
         },
-        hot: '#ff2d78',
-        cool: '#38bdf8',
-        mint: '#34d399',
-        gold: '#fbbf24',
-        violet: '#a78bfa',
+        hot: 'rgb(var(--c-hot) / <alpha-value>)',
+        cool: 'rgb(var(--c-cool) / <alpha-value>)',
+        mint: 'rgb(var(--c-mint) / <alpha-value>)',
+        gold: 'rgb(var(--c-gold) / <alpha-value>)',
+        violet: 'rgb(var(--c-violet) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -30,9 +38,10 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       boxShadow: {
-        glow: '0 0 24px -4px rgba(255, 90, 60, 0.45)',
-        'glow-hot': '0 0 24px -4px rgba(255, 45, 120, 0.45)',
-        card: '0 10px 30px -12px rgba(0, 0, 0, 0.6)',
+        glow: '0 0 20px -6px var(--glow-brand)',
+        'glow-lg': '0 0 32px -6px var(--glow-brand)',
+        'glow-hot': '0 0 24px -4px rgba(244, 63, 94, 0.4)',
+        card: 'var(--shadow-card)',
       },
       keyframes: {
         rise: {

@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="FanForge — a passion-intelligence platform that scores, searches, narrates, and rewards fandom in real time." />
     <title>FanForge — Passion Intelligence</title>
+    <script>
+      // Apply the saved (or system) theme before first paint to avoid a flash
+      // of the wrong theme. Mirrors the logic in src/lib/theme.tsx.
+      (function () {
+        try {
+          var t = localStorage.getItem('fanforge:theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.classList.toggle('dark', t === 'dark');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

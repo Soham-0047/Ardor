@@ -2,6 +2,8 @@
 .claude/
 ./claude
 
+./claude/ui-ux-pro-max
+
 # Dependencies
 node_modules/
 .pnp
