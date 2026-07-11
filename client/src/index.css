@@ -5,39 +5,156 @@
 @tailwind utilities;
 
 @layer base {
+  /* ────────────────────────────────────────────────────────────────
+     Theme tokens. RGB triplets so Tailwind alpha modifiers keep working.
+     :root = light ("bone paper"), .dark = dark ("stadium night").
+
+     Accent sets are validated (dataviz six-checks) against each mode's
+     card surface: lightness band, chroma floor, CVD separation, contrast.
+     ──────────────────────────────────────────────────────────────── */
+  :root {
+    color-scheme: light;
+
+    --ink-900: 244 243 238; /* page background — warm bone */
+    --ink-800: 236 235 227; /* inputs / chips */
+    --ink-700: 224 223 212; /* hover / active fills */
+    --ink-card: 253 253 251;
+    --ink-border: 214 213 200;
+    --ink-muted: 90 107 96;
+    --ink-faint: 126 140 130;
+    --fg: 31 42 36;
+    --fg-strong: 12 20 16;
+
+    /* Accents — moss volt / crimson / lake / pine / bronze / iris. */
+    --c-ember: 77 124 15; /* brand primary: moss volt */
+    --c-ember-soft: 101 163 13;
+    --c-ember-deep: 54 89 8;
+    --c-hot: 200 30 79;
+    --c-cool: 2 112 163;
+    --c-mint: 4 120 87;
+    --c-gold: 150 102 10;
+    --c-violet: 109 79 194;
+    --c-orange: 194 90 12;
+    --c-blue: 29 78 216;
+    --c-danger: 185 28 28;
+    /* Text/icon color that sits ON a filled accent (buttons, active pills). */
+    --c-on-accent: 255 255 255;
+
+    /* Passion-score temperature ramp: ice → pine → bronze → flame → crimson. */
+    --p0: 2 112 163;
+    --p45: 4 120 87;
+    --p65: 150 102 10;
+    --p82: 194 90 12;
+    --p100: 200 30 79;
+
+    --shadow-card: 0 1px 2px rgba(20, 28, 23, 0.06), 0 12px 32px -16px rgba(20, 28, 23, 0.18);
+    --glow-brand: rgba(77, 124, 15, 0.28);
+    --bg-glow-a: rgba(77, 124, 15, 0.06);
+    --bg-glow-b: rgba(2, 112, 163, 0.05);
+    --grid-line: rgba(20, 28, 23, 0.045);
+  }
+
+  .dark {
+    color-scheme: dark;
+
+    --ink-900: 10 15 13; /* page background — pitch black-green */
+    --ink-800: 16 23 20;
+    --ink-700: 27 38 33;
+    --ink-card: 18 26 22;
+    --ink-border: 36 51 44;
+    --ink-muted: 150 166 157;
+    --ink-faint: 100 117 108;
+    --fg: 232 239 234;
+    --fg-strong: 255 255 255;
+
+    /* Accents — volt / coral-red / ice / mint / amber / iris. */
+    --c-ember: 179 230 40; /* brand primary: volt */
+    --c-ember-soft: 205 242 102;
+    --c-ember-deep: 132 178 20;
+    --c-hot: 244 63 94;
+    --c-cool: 34 178 232;
+    --c-mint: 16 185 129;
+    --c-gold: 226 168 24;
+    --c-violet: 139 114 232;
+    --c-orange: 240 138 44;
+    --c-blue: 96 165 250;
+    --c-danger: 248 113 113;
+    --c-on-accent: 10 15 13;
+
+    /* Passion ramp: ice → mint → amber → flame → coral-red. */
+    --p0: 34 178 232;
+    --p45: 16 185 129;
+    --p65: 226 168 24;
+    --p82: 240 138 44;
+    --p100: 244 63 94;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 16px 40px -18px rgba(0, 0, 0, 0.65);
+    --glow-brand: rgba(179, 230, 40, 0.3);
+    --bg-glow-a: rgba(179, 230, 40, 0.05);
+    --bg-glow-b: rgba(34, 178, 232, 0.05);
+    --grid-line: rgba(232, 239, 234, 0.035);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
   html,
   body,
   #root {
     height: 100%;
   }
   body {
-    @apply bg-ink-900 text-slate-100 font-sans antialiased;
+    @apply bg-ink-900 text-fg font-sans antialiased;
+    /* Floodlight glows + a faint pitch-grid, fading out below the fold. */
     background-image:
-      radial-gradient(60rem 40rem at 80% -10%, rgba(255, 45, 120, 0.10), transparent 60%),
-      radial-gradient(50rem 40rem at 10% 0%, rgba(56, 189, 248, 0.08), transparent 55%);
+      radial-gradient(60rem 40rem at 82% -12%, var(--bg-glow-a), transparent 60%),
+      radial-gradient(50rem 40rem at 8% -4%, var(--bg-glow-b), transparent 55%),
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:
+      auto,
+      auto,
+      48px 48px,
+      48px 48px;
     background-attachment: fixed;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
   ::selection {
-    @apply bg-ember/40 text-white;
+    background: rgb(var(--c-ember) / 0.35);
   }
   /* Slim scrollbars */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #2a3048 transparent;
+    scrollbar-color: rgb(var(--ink-border)) transparent;
   }
   *::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   *::-webkit-scrollbar-thumb {
-    background: #2a3048;
+    background: rgb(var(--ink-border));
     border-radius: 9999px;
   }
 }
 
 @layer components {
   .ff-card {
-    @apply rounded-2xl border border-ink-border bg-ink-card/70 backdrop-blur-sm shadow-card;
+    @apply relative rounded-2xl border border-ink-border bg-ink-card/80 backdrop-blur-sm shadow-card;
+  }
+  /* Hairline top-light — the little sheen that reads "premium" up close. */
+  .ff-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    border-radius: 1rem 1rem 0 0;
+    background: linear-gradient(
+      90deg,
+      transparent 4%,
+      rgb(var(--fg-strong) / 0.09) 50%,
+      transparent 96%
+    );
+    pointer-events: none;
   }
   .ff-chip {
     @apply inline-flex items-center gap-1.5 rounded-full border border-ink-border bg-ink-800/80 px-2.5 py-1 text-xs font-medium text-ink-muted;
@@ -50,31 +167,122 @@
       focus:outline-none focus-visible:ring-2 focus-visible:ring-ember/60 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .ff-btn-primary {
-    @apply ff-btn bg-gradient-to-r from-ember to-hot text-white shadow-glow hover:brightness-110;
+    /* Solid volt with on-accent ink — dark text on volt (dark mode), white on moss (light). */
+    @apply ff-btn bg-gradient-to-b from-ember-soft to-ember text-on-accent shadow-glow
+      hover:brightness-105 hover:shadow-glow-lg active:translate-y-px;
   }
   .ff-btn-ghost {
-    @apply ff-btn border border-ink-border bg-ink-800/60 text-slate-200 hover:border-ember/50 hover:text-white;
+    @apply ff-btn border border-ink-border bg-ink-800/60 text-fg hover:border-ember/50 hover:text-strong;
   }
   .ff-input {
-    @apply w-full rounded-xl border border-ink-border bg-ink-800/70 px-4 py-2.5 text-sm text-slate-100
+    @apply w-full rounded-xl border border-ink-border bg-ink-800/70 px-4 py-2.5 text-sm text-fg
       placeholder:text-ink-faint focus:border-ember/60 focus:outline-none focus:ring-2 focus:ring-ember/20;
   }
   .ff-label {
     @apply text-xs font-semibold uppercase tracking-wider text-ink-faint;
   }
   .gradient-text {
-    @apply bg-gradient-to-r from-ember via-hot to-violet bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-ember via-mint to-cool bg-clip-text text-transparent;
   }
   .ff-nav-link {
-    @apply rounded-lg px-3 py-2 text-sm font-medium text-ink-muted transition hover:text-white hover:bg-ink-700;
+    @apply rounded-lg px-3 py-2 text-sm font-medium text-ink-muted transition hover:text-strong hover:bg-ink-700;
   }
   .ff-nav-link-active {
-    @apply bg-ink-700 text-white;
+    @apply bg-ink-700 text-strong;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* ── Animated SVG sports art ──────────────────────────────────────
+   Draw-in pitch lines, orbiting ball, radar pulses. All CSS-driven,
+   all disabled under prefers-reduced-motion. */
+.sport-draw {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: sport-draw 2.4s ease-out forwards;
+}
+.sport-spin {
+  animation: sport-spin 22s linear infinite;
+  transform-origin: center;
+}
+.sport-orbit {
+  animation: sport-orbit 14s linear infinite;
+  transform-origin: center;
+}
+.sport-float {
+  animation: sport-float 5.5s ease-in-out infinite;
+}
+.sport-pulse {
+  animation: sport-pulse 3.2s ease-out infinite;
+  transform-origin: center;
+}
+.sport-wave {
+  animation: sport-wave 2.8s ease-in-out infinite;
+}
+
+@keyframes sport-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sport-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes sport-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes sport-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes sport-pulse {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+@keyframes sport-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sport-draw {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .sport-spin,
+  .sport-orbit,
+  .sport-float,
+  .sport-pulse,
+  .sport-wave {
+    animation: none;
   }
 }
