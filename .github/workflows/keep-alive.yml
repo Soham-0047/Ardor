@@ -1,0 +1,12 @@
+name: Keep Render Alive
+on:
+  schedule:
+    - cron: '*/14 * * * *'   # every 14 minutes
+  workflow_dispatch: {}       # lets you trigger manually too
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping FanForge
+        run: curl -sf https://fanforge-pce7.onrender.com/ || echo "ping failed"
