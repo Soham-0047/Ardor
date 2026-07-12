@@ -3,7 +3,7 @@ import type { PassionScore, RawEvent, Sentiment } from '../types';
 /**
  * Deterministic, dependency-free passion scorer (v2).
  *
- * This is the offline fallback for the Gemini structured-extraction call, so
+ * This is the offline fallback for the admin-service structured-extraction call, so
  * FanForge's core loop works end-to-end with zero API keys. v2 upgrades v1's
  * flat keyword counter into a small feature model — still fully deterministic
  * and explainable:

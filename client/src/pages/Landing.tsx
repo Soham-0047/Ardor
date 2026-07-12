@@ -119,7 +119,7 @@ const STEPS = [
   {
     n: '03',
     title: 'Score',
-    text: 'Gemini structured extraction turns raw fan noise into a 0–100 passion score, sentiment, and recap.',
+    text: 'AI structured extraction turns raw fan noise into a 0–100 passion score, sentiment, and recap.',
     emoji: '🧠',
   },
   {
@@ -150,9 +150,9 @@ const FEATURES = [
     to: '/app/explore',
   },
   {
-    emoji: '❄️',
+    emoji: '📊',
     title: 'Passion warehouse',
-    text: 'Every scored moment streams into Snowflake — passion over time, sentiment mix, and the hottest teams at warehouse scale.',
+    text: 'Every scored moment rolls up with MongoDB aggregations — passion over time, sentiment mix, and the hottest teams at warehouse scale.',
     to: '/app',
   },
   {
@@ -185,8 +185,8 @@ const PLUGIN_SNIPPET = `interface FanPlugin {
 }`;
 
 const CORE_TECH = [
-  { emoji: '🧠', name: 'Google AI (Gemini)', note: 'structured passion scoring' },
-  { emoji: '❄️', name: 'Snowflake', note: 'fandom warehouse analytics' },
+  { emoji: '🧠', name: 'AI router (admin-service)', note: 'structured passion scoring' },
+  { emoji: '📊', name: 'MongoDB aggregation', note: 'fandom warehouse analytics' },
   { emoji: '🔊', name: 'ElevenLabs', note: 'spoken hype narration' },
   { emoji: '◎', name: 'Solana', note: 'proof-of-fandom badges' },
 ];
@@ -503,8 +503,8 @@ export default function Landing() {
         <section id="tech" className="scroll-mt-24 pb-16 sm:pb-20">
           <SectionHeading
             kicker="Under the hood"
-            title="Four sponsor techs, honestly wired"
-            subtitle="Gemini scores it, Snowflake remembers it, ElevenLabs speaks it, Solana proves it — each lights up when keys exist and degrades gracefully when they don't."
+            title="The stack, honestly wired"
+            subtitle="AI scores it, MongoDB warehouses it, ElevenLabs speaks it, Solana proves it — each lights up when keys exist and degrades gracefully when they don't."
           />
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
             <div className="gs-reveal ff-card p-5">
@@ -571,7 +571,7 @@ export default function Landing() {
       <footer className="border-t border-ink-border">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-xs text-ink-faint">
           <span>🔥 FanForge · a pluggable passion-intelligence platform</span>
-          <span>Gemini + Snowflake + ElevenLabs + Solana · built for the DEV Weekend Challenge</span>
+          <span>AI + MongoDB + ElevenLabs + Solana · built for the DEV Weekend Challenge</span>
         </div>
       </footer>
     </div>

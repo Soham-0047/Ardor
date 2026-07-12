@@ -2,13 +2,13 @@ import { flags } from '../config/env';
 import type { PassionScore, RawEvent } from '../types';
 import type { FanPlugin } from '../plugins/types';
 import { heuristicScore } from '../lib/heuristicScorer';
-import { geminiScore } from './gemini';
+import { aiScore } from './aiScorer';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('scoring');
 
 /** A hung upstream call must not stall the pipeline — fall back instead. */
-const GEMINI_TIMEOUT_MS = 10_000;
+const AI_TIMEOUT_MS = 30_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -27,16 +27,16 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
 }
 
 /**
- * Score an event. Uses Gemini structured extraction when a key is configured,
+ * Score an event. Uses admin-service structured extraction when configured,
  * and always falls back to the deterministic heuristic on any error or timeout
  * so the pipeline never stalls. The rest of the app only ever calls scoreEvent.
  */
 export async function scoreEvent(event: RawEvent, plugin?: FanPlugin): Promise<PassionScore> {
-  if (flags.gemini) {
+  if (flags.ai) {
     try {
-      return await withTimeout(geminiScore(event, plugin), GEMINI_TIMEOUT_MS);
+      return await withTimeout(aiScore(event, plugin), AI_TIMEOUT_MS);
     } catch (err) {
-      log.warn(`Gemini scoring failed for "${event.title}", using heuristic`, (err as Error).message);
+      log.warn(`AI scoring failed for "${event.title}", using heuristic`, (err as Error).message);
     }
   }
   return heuristicScore(event);

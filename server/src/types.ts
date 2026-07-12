@@ -3,7 +3,7 @@
  *
  * These are the contracts every layer agrees on:
  *   RawEvent      — a normalized fan/match event, pre-scoring
- *   PassionScore  — the structured signal Gemini (or the heuristic) returns
+ *   PassionScore  — the structured signal the AI (or the heuristic) returns
  *   ScoredEvent   — RawEvent + PassionScore, persisted and surfaced
  *
  * Keep this file dependency-free; both the plugin layer and the API
@@ -15,7 +15,7 @@ export type Domain = 'worldcup' | 'rivalry' | 'personal';
 
 export const DOMAINS: Domain[] = ['worldcup', 'rivalry', 'personal'];
 
-/** Emotional register of a moment. Mirrors the Gemini response enum. */
+/** Emotional register of a moment. Mirrors the AI response enum. */
 export type Sentiment =
   | 'ecstatic'
   | 'positive'
@@ -77,7 +77,7 @@ export interface PassionScore {
   key_moment: boolean;
   /** One-sentence recap suitable for a feed or narration. */
   one_line_recap: string;
-  /** Which scorer produced this: "gemini:<model>" or "heuristic-v1". */
+  /** Which scorer produced this: "<provider>:<model>" or "heuristic-v1". */
   model: string;
 }
 
@@ -93,8 +93,7 @@ export interface ScoredEvent extends RawEvent {
 
 /** Runtime feature flags exposed to the client via GET /api/config. */
 export interface FeatureFlags {
-  gemini: boolean;
-  snowflake: boolean;
+  ai: boolean;
   elevenlabs: boolean;
   solana: boolean;
   footballData: boolean;

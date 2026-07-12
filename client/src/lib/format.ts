@@ -96,9 +96,10 @@ export function formatTime(iso: string): string {
   });
 }
 
-/** Short model provenance label, e.g. "Gemini" or "Heuristic". */
+/** Short model provenance label, e.g. "AI" or "Heuristic". */
 export function modelLabel(model: string): string {
-  if (model.startsWith('gemini')) return 'Gemini';
   if (model.startsWith('heuristic')) return 'Heuristic';
+  // AI scores are tagged "<provider>:<model>" (e.g. "groq:llama-3.3-70b").
+  if (model.includes(':')) return 'AI';
   return model;
 }

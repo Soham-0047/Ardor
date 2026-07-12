@@ -40,8 +40,7 @@ export interface ScoredEvent {
 }
 
 export interface FeatureFlags {
-  gemini: boolean;
-  snowflake: boolean;
+  ai: boolean;
   elevenlabs: boolean;
   solana: boolean;
   footballData: boolean;

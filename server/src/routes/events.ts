@@ -6,7 +6,7 @@ import { asyncHandler } from '../lib/asyncHandler';
 import { getPlugin } from '../plugins/registry';
 import { ingestAll, ingestOne, scoreAndStore } from '../services/ingestion';
 import { searchMoments } from '../services/search';
-import { syncMoment, warehouseInsights } from '../services/warehouse';
+import { warehouseInsights } from '../services/warehouse';
 import { getOrCreateClip } from '../services/audio';
 
 const router = Router();
@@ -60,7 +60,7 @@ router.get(
   }),
 );
 
-/** GET /api/warehouse — Snowflake-scale fandom analytics (Mongo fallback). */
+/** GET /api/warehouse — warehouse-scale fandom analytics (MongoDB aggregation). */
 router.get(
   '/warehouse',
   asyncHandler(async (_req, res) => {
@@ -180,7 +180,6 @@ router.post(
     }
     const raw = plugin.normalizeUserAction((req.body ?? {}) as Record<string, unknown>);
     const { event } = await scoreAndStore(raw, plugin);
-    await syncMoment(event);
     res.status(201).json({ event });
   }),
 );

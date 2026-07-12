@@ -31,8 +31,8 @@ cp .env.example server/.env
 
 | Feature | Service | Sign up at | Free tier | Env vars |
 |---|---|---|---|---|
-| AI passion scoring | **Google AI Studio (Gemini)** | [aistudio.google.com](https://aistudio.google.com) | 1,500 req/day, permanent | `GEMINI_API_KEY` |
-| Passion warehouse | **Snowflake** | [signup.snowflake.com](https://signup.snowflake.com) (30-day trial) | $400 trial credit — fine for a weekend demo; Mongo fallback after | `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USERNAME`, `SNOWFLAKE_PASSWORD` (+ optional `SNOWFLAKE_DATABASE/SCHEMA/WAREHOUSE`) |
+| AI passion scoring | **admin-service** (central vault + free-LLM router) | shared service token — see [admin.md](admin.md) | free — routes to the healthiest free LLM with failover | `ADMIN_URL`, `SERVICE_TOKEN` |
+| Passion warehouse | **MongoDB aggregation** | — (uses your MongoDB) | free, no extra service | none |
 | Persistent database | **MongoDB Atlas** | [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas/register) (M0 cluster) | 512 MB, permanent | `MONGODB_URI` |
 | Live World Cup feed | **football-data.org** | [football-data.org](https://www.football-data.org/client/register) | 10 req/min, permanent | `FOOTBALL_DATA_API_KEY` |
 | Hype narration | **ElevenLabs** | [elevenlabs.io](https://elevenlabs.io/sign-up) | 10k chars/mo | `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` |
@@ -40,17 +40,13 @@ cp .env.example server/.env
 
 ### Step-by-step per service
 
-**Google AI Studio (Gemini)**
-1. Go to [aistudio.google.com](https://aistudio.google.com) → sign in with any Google account.
-2. Click **Get API key** → **Create API key**.
-3. Paste into `server/.env` as `GEMINI_API_KEY=...`
-4. Restart — the header pill flips from "Heuristic scoring" to "Gemini scoring".
+**admin-service (AI passion scoring)**
+1. Get the shared `SERVICE_TOKEN` from whoever runs the admin dashboard (see [admin.md](admin.md)) — it's a shared service secret, not a personal login.
+2. Add to `server/.env`: `ADMIN_URL=https://admin-w1i8.onrender.com` and `SERVICE_TOKEN=...`
+3. Restart — the header pill flips from "Heuristic scoring" to "AI scoring". FanForge asks admin-service for the healthiest free LLM at request time and fails over across providers automatically; no per-provider key lives in this repo.
 
-**Snowflake**
-1. Sign up at [signup.snowflake.com](https://signup.snowflake.com) — pick any cloud/region; the trial needs no card.
-2. Note your **account identifier** (Admin → Accounts, e.g. `abc12345.us-east-1`) and the username/password you created.
-3. Fill `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USERNAME`, `SNOWFLAKE_PASSWORD`. Database/schema/warehouse default to `FANFORGE`/`PUBLIC`/`COMPUTE_WH` — create the database once in a worksheet (`CREATE DATABASE FANFORGE;`); the `PASSION_MOMENTS` table is created automatically.
-4. Re-run ingest (button on the dashboard) to stream existing moments into the warehouse; `GET /api/warehouse` should now answer with `"engine": "snowflake"`.
+**Passion warehouse (MongoDB aggregation)**
+- No setup. `GET /api/warehouse` answers warehouse-scale fandom analytics (`"engine": "mongodb"`) by aggregating the same MongoDB the scored moments are stored in.
 
 **MongoDB Atlas** (persistence — without it, in-memory data resets each restart)
 1. Register at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas/register) → create a free **M0** cluster (any region).
@@ -131,7 +127,7 @@ This is a long-running Express monolith; Vercel's serverless model would require
 | `INGEST_INTERVAL_MS` | `600000` (10 min) | background re-ingest keeps the feed fresh |
 | `PORT` | *(platform-provided)* | Render/Railway/Fly inject it automatically |
 | `CLIENT_ORIGIN` | your public URL | CORS, only needed if client is hosted separately |
-| `GEMINI_API_KEY`, `SNOWFLAKE_*`, `ELEVENLABS_*`, `SOLANA_MINT_SECRET` | your keys | the four prize-category integrations |
+| `SERVICE_TOKEN` (+ `ADMIN_URL`), `ELEVENLABS_*`, `SOLANA_MINT_SECRET` | your keys / shared token | AI scoring (admin-service), narration, badges |
 
 ## 5. Demo-day checklist
 

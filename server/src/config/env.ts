@@ -25,19 +25,10 @@ export const env = {
   mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/fanforge',
   useMemoryDb: bool(process.env.USE_MEMORY_DB, false),
 
-  // Gemini
-  geminiApiKey: process.env.GEMINI_API_KEY || '',
-  geminiModel: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
-
-  // Snowflake (passion warehouse, flagged)
-  featureSnowflake: bool(process.env.FEATURE_SNOWFLAKE, true),
-  snowflakeAccount: process.env.SNOWFLAKE_ACCOUNT || '',
-  snowflakeUsername: process.env.SNOWFLAKE_USERNAME || '',
-  snowflakePassword: process.env.SNOWFLAKE_PASSWORD || '',
-  snowflakeDatabase: process.env.SNOWFLAKE_DATABASE || 'FANFORGE',
-  snowflakeSchema: process.env.SNOWFLAKE_SCHEMA || 'PUBLIC',
-  snowflakeWarehouse: process.env.SNOWFLAKE_WAREHOUSE || 'COMPUTE_WH',
-  snowflakeTable: process.env.SNOWFLAKE_TABLE || 'PASSION_MOMENTS',
+  // admin-service (central vault + smart LLM router — see /admin.md).
+  // Replaces a hardcoded Gemini key: we ask it for the healthiest free LLM.
+  adminUrl: process.env.ADMIN_URL || 'https://admin-w1i8.onrender.com',
+  serviceToken: process.env.SERVICE_TOKEN || '',
 
   // football-data.org
   footballDataApiKey: process.env.FOOTBALL_DATA_API_KEY || '',
@@ -61,10 +52,7 @@ export const env = {
  * "live" only if its flag is on AND its credentials exist.
  */
 export const flags: FeatureFlags = {
-  gemini: Boolean(env.geminiApiKey),
-  snowflake:
-    env.featureSnowflake &&
-    Boolean(env.snowflakeAccount && env.snowflakeUsername && env.snowflakePassword),
+  ai: Boolean(env.serviceToken),
   elevenlabs: env.featureElevenLabs && Boolean(env.elevenLabsApiKey),
   solana: env.featureSolana && Boolean(env.solanaMintSecret),
   footballData: Boolean(env.footballDataApiKey),

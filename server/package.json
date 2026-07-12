@@ -12,7 +12,6 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/genai": "^1.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -23,8 +22,7 @@
   "optionalDependencies": {
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.98.0",
-    "bs58": "^6.0.0",
-    "snowflake-sdk": "^2.0.2"
+    "bs58": "^6.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

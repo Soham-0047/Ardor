@@ -25,8 +25,8 @@ Plus the passion-intelligence integrations, **each with an offline fallback so n
 
 | Integration | Role | Fallback when no key |
 |---|---|---|
-| **Google AI (Gemini)** | Structured passion scoring (schema-constrained JSON extraction) | Deterministic heuristic scorer |
-| **Snowflake** | Passion warehouse — every scored moment streams into a `PASSION_MOMENTS` table; `/api/warehouse` answers fandom analytics with Snowflake SQL | MongoDB aggregation pipeline |
+| **AI router (admin-service)** | Structured passion scoring (schema-constrained JSON extraction) via the healthiest free LLM, with cross-provider failover | Deterministic heuristic scorer |
+| **MongoDB aggregation** | Passion warehouse — `/api/warehouse` answers fandom analytics (passion by hour/domain/team/sentiment) at warehouse scale | — (always available) |
 | **ElevenLabs** | Spoken hype narration of top moments (cached to disk, never regenerated) | Disabled, UI adapts |
 | **Solana devnet** | "Passion Points" badge minting (0-decimal SPL tokens, Explorer-verifiable) | Simulated badge (clearly labelled) |
 | **football-data.org** | Live World Cup feed | Seeded 60-event dataset |
@@ -98,14 +98,14 @@ Match data & user actions
             │
    ┌────────┼───────────────┬──────────────┬───────────────┐
    ▼        ▼               ▼              ▼                ▼
- MongoDB   Snowflake     ElevenLabs      Solana         React
+ MongoDB   MongoDB agg   ElevenLabs      Solana         React
  (store)   (warehouse)   (narration)     (badges)       dashboard
 ```
 
 1. **Ingest** — a plugin's `fetchEvents()` pulls events (World Cup feed or seed; sample rivalry/personal events; or user submissions).
 2. **Route** — the plugin router tags each event with its domain and normalizes it to a common schema.
-3. **Score** — Gemini returns a **structured JSON object** (`passion_score`, `sentiment`, `key_moment`, `one_line_recap`) — a schema-constrained extraction, not a chat reply. No key → deterministic heuristic scorer.
-4. **Fan out** — every scored event is written to **MongoDB**, streamed into the **Snowflake** passion warehouse, optionally narrated by **ElevenLabs**, and can trigger a **Solana** badge.
+3. **Score** — the AI (routed via admin-service to the healthiest free LLM) returns a **structured JSON object** (`passion_score`, `sentiment`, `key_moment`, `one_line_recap`) — a schema-constrained extraction, not a chat reply. No service token → deterministic heuristic scorer.
+4. **Fan out** — every scored event is written to **MongoDB** (which also powers the warehouse analytics), optionally narrated by **ElevenLabs**, and can trigger a **Solana** badge.
 5. **Surface** — the dashboard shows the live scored feed, instant search, warehouse-backed trend analytics, the hype-off tournament, and the personal passion tracker.
 
 ---
@@ -114,7 +114,7 @@ Match data & user actions
 
 - **Live passion feed** — real-time scored moments with recap text, sentiment, and a radial passion gauge; filter by domain, sort by recency or passion, key-moments-only toggle.
 - **Instant fan search** — passion-ranked full-text search across every scored moment and recap.
-- **Trend analytics** — passion-over-time, sentiment distribution, and top teams — served from the Snowflake warehouse when configured, Mongo aggregations otherwise.
+- **Trend analytics** — passion-over-time, sentiment distribution, and top teams — served by MongoDB aggregation at warehouse scale.
 - **Hype-Off tournament** — fan-vs-fan bracket voting; votes earn **Passion Points** (tournament-linked, streak-gated) and mint badges at engagement thresholds.
 - **Personal passion tracker** — an "off-season" mode: journal your own project streak and watch the engine score each entry live.
 - **Rivalry arena** — score the heat of any two-sided rivalry you submit.
@@ -159,7 +159,7 @@ Base URL: `http://localhost:4000/api`
 | GET | `/events` | Scored feed. Query: `domain`, `type`, `matchId`, `minScore`, `keyMoment`, `sort=recent\|score`, `limit` |
 | GET | `/events/:id` | Single scored event |
 | GET | `/search` | Instant search. Query: `q`, `domain`, `limit` |
-| GET | `/warehouse` | Snowflake-scale fandom analytics (`engine` says whether Snowflake or the Mongo fallback answered) |
+| GET | `/warehouse` | Warehouse-scale fandom analytics via MongoDB aggregation (`engine: "mongodb"`) |
 | GET | `/trends` | Aggregate analytics (totals, byDomain, timeline, topTeams, sentiment, topMoments) |
 | POST | `/ingest` | Run the pipeline. Body: `{ pluginId? }` (omit for all) |
 | POST | `/plugins/:id/actions` | Submit a user action (journal / rivalry) → scored |
@@ -183,8 +183,8 @@ fanforge/
 │       ├── types.ts             # shared domain contracts
 │       ├── models/              # Mongoose: Event, User, Vote, Tournament
 │       ├── plugins/             # FanPlugin interface + worldcup / rivalry / personal + registry
-│       ├── services/            # scoring (gemini + heuristic), search (mongo full-text),
-│       │                        #   warehouse (snowflake), audio (elevenlabs), badge (solana)
+│       ├── services/            # scoring (admin-service AI + heuristic), search (mongo full-text),
+│       │                        #   warehouse (mongo aggregation), audio (elevenlabs), badge (solana)
 │       ├── lib/                 # heuristic scorer, logger, async handler
 │       ├── data/                # seeded World Cup dataset (60 events)
 │       └── routes/              # meta, events, social
@@ -205,7 +205,7 @@ Every service is free-tier and card-free, and the app is fully functional with *
 
 ## ⚠️ Notes
 
-- **Prize-category tech**: this build targets **Best use of Google AI** (Gemini structured scoring), **Best use of Snowflake** (the passion warehouse), **Best use of ElevenLabs** (hype narration), and **Best use of Solana** (proof-of-fandom badges) — each genuinely load-bearing, each with a graceful fallback.
+- **Core tech**: **AI structured scoring** via admin-service (healthiest free LLM, cross-provider failover), a **MongoDB-aggregation passion warehouse**, **ElevenLabs** hype narration, and **Solana** proof-of-fandom badges — each genuinely load-bearing, each with a graceful fallback.
 - Every integration lights up automatically when its credentials exist; no flag flipping needed (set `FEATURE_*=false` to force one off).
 - football-data.org's free tier is delayed, not real-time — the seeded dataset is the reliable demo path.
 

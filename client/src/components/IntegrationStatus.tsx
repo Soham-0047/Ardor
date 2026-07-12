@@ -22,15 +22,15 @@ export default function IntegrationStatus() {
   const rows: Capability[] = [
     {
       emoji: '🧠',
-      label: 'Gemini scoring',
-      live: flags.gemini,
-      note: flags.gemini ? 'Live structured extraction' : 'Deterministic heuristic fallback',
+      label: 'AI passion scoring',
+      live: flags.ai,
+      note: flags.ai ? 'Live structured extraction (admin-service router)' : 'Deterministic heuristic fallback',
     },
     {
-      emoji: '❄️',
-      label: 'Snowflake warehouse',
-      live: flags.snowflake,
-      note: flags.snowflake ? 'Warehouse-scale fan analytics' : 'MongoDB aggregation fallback',
+      emoji: '📊',
+      label: 'Passion warehouse',
+      live: true,
+      note: 'Warehouse-scale fan analytics (MongoDB aggregation)',
     },
     {
       emoji: '🔊',

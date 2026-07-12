@@ -3,7 +3,6 @@ import type { FanPlugin } from '../plugins/types';
 import { EventModel, toScoredEvent } from '../models';
 import { allPlugins, getPlugin } from '../plugins/registry';
 import { scoreEvent } from './scoring';
-import { syncMoments } from './warehouse';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('ingestion');
@@ -18,7 +17,7 @@ export interface IngestReport {
 /**
  * Score one raw event and persist it. Existing events (matched by externalId)
  * are returned untouched, so re-ingesting is idempotent and never re-spends
- * Gemini calls. Newly-seen events are scored and inserted.
+ * AI calls. Newly-seen events are scored and inserted.
  */
 export async function scoreAndStore(
   raw: RawEvent,
@@ -48,17 +47,14 @@ export async function scoreAndStore(
   return { event: toScoredEvent(doc), created: true };
 }
 
-/** Run one plugin's full ingest: fetch → score → store → warehouse. */
+/** Run one plugin's full ingest: fetch → score → store. */
 export async function ingestPlugin(plugin: FanPlugin): Promise<IngestReport> {
   const raws = await plugin.fetchEvents();
-  const scored: ScoredEvent[] = [];
   let created = 0;
   for (const raw of raws) {
-    const { event, created: isNew } = await scoreAndStore(raw, plugin);
-    scored.push(event);
+    const { created: isNew } = await scoreAndStore(raw, plugin);
     if (isNew) created++;
   }
-  await syncMoments(scored);
   const report: IngestReport = {
     pluginId: plugin.id,
     fetched: raws.length,

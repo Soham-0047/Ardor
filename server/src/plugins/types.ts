@@ -22,7 +22,7 @@ export interface FanPlugin {
    */
   voicePersona: string;
   /**
-   * Domain-specific guidance appended to the base scoring prompt so Gemini
+   * Domain-specific guidance appended to the base scoring prompt so the AI
    * (and the heuristic) understand what "passion" means for this domain.
    */
   scoringPrompt: string;

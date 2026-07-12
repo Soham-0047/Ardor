@@ -15,8 +15,7 @@ interface AppState {
 }
 
 const DEFAULT_FLAGS: FeatureFlags = {
-  gemini: false,
-  snowflake: false,
+  ai: false,
   elevenlabs: false,
   solana: false,
   footballData: false,

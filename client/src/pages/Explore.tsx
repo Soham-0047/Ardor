@@ -4,7 +4,7 @@ import { StadiumWave } from '../components/SportsArt';
 
 export default function ExplorePage() {
   const { flags } = useApp();
-  const gemini = flags.gemini;
+  const ai = flags.ai;
 
   return (
     <div className="space-y-6">
@@ -19,16 +19,16 @@ export default function ExplorePage() {
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-ink-muted sm:text-base">
           Instant, passion-ranked search across every fan and match moment we&apos;ve scored — every
-          result carries the structured passion signal Gemini extracted from it.
+          result carries the structured passion signal the AI extracted from it.
         </p>
 
         <div className="mt-4">
           <span className="ff-chip inline-flex items-center gap-1.5">
             <span
-              className={`h-2 w-2 rounded-full ${gemini ? 'bg-mint' : 'bg-gold'} animate-pulse`}
+              className={`h-2 w-2 rounded-full ${ai ? 'bg-mint' : 'bg-gold'} animate-pulse`}
               aria-hidden
             />
-            {gemini ? 'Gemini-scored' : 'Heuristic-scored'} moments · full-text ranked by passion
+            {ai ? 'AI-scored' : 'Heuristic-scored'} moments · full-text ranked by passion
           </span>
         </div>
       </section>

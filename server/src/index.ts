@@ -8,12 +8,17 @@ import { connectDb } from './config/db';
 import api from './routes';
 import { EventModel } from './models';
 import { ingestAll } from './services/ingestion';
+import { warmup } from './services/admin';
 import { createLogger } from './lib/logger';
 
 const log = createLogger('server');
 
 async function bootstrap() {
   const db = await connectDb();
+
+  // admin-service runs on a free Render dyno that sleeps — wake it on boot so
+  // the first scoring call isn't a cold start.
+  if (flags.ai) warmup();
 
   // Ensure the audio cache dir exists so express.static has something to serve.
   fs.mkdirSync(AUDIO_DIR, { recursive: true });
@@ -70,7 +75,7 @@ async function bootstrap() {
   app.listen(env.port, () => {
     log.info(`FanForge API listening on http://localhost:${env.port}`);
     log.info(
-      `integrations — gemini:${flags.gemini} snowflake:${flags.snowflake} ` +
+      `integrations — ai:${flags.ai} ` +
         `elevenlabs:${flags.elevenlabs} solana:${flags.solana} ` +
         `footballData:${flags.footballData} memoryDb:${db.memory}`,
     );

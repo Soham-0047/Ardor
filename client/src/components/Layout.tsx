@@ -42,8 +42,8 @@ export default function Layout() {
                 className="hidden items-center gap-1.5 text-xs text-ink-faint md:inline-flex"
                 title="Passion scoring engine"
               >
-                <span className={`h-2 w-2 rounded-full ${flags.gemini ? 'bg-mint' : 'bg-gold'} animate-pulse-glow`} />
-                {flags.gemini ? 'Gemini' : 'Heuristic'} scoring
+                <span className={`h-2 w-2 rounded-full ${flags.ai ? 'bg-mint' : 'bg-gold'} animate-pulse-glow`} />
+                {flags.ai ? 'AI' : 'Heuristic'} scoring
               </span>
             )}
             {user ? (
@@ -80,7 +80,7 @@ export default function Layout() {
       </main>
 
       <footer className="mx-auto max-w-6xl px-4 py-8 text-center text-xs text-ink-faint">
-        FanForge · a pluggable passion-intelligence platform · Gemini + Snowflake + ElevenLabs + Solana
+        FanForge · a pluggable passion-intelligence platform · AI + MongoDB + ElevenLabs + Solana
         {flags.memoryDb && <span className="ml-1">· in-memory MongoDB</span>}
       </footer>
     </div>
