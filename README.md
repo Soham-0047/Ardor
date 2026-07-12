@@ -214,8 +214,3 @@ Every service is free-tier and card-free, and the app is fully functional with *
 - Real-time match feeds; more plugins (esports, GitHub-repo rivalries, music fandoms).
 - Metaplex NFT badges; a public API for third-party passion domains.
 - Open-source the plugin framework for community-built domains.
-
-## 🔗 Links
-
-- DEV submission post: draft in [SUBMISSION.md](SUBMISSION.md) — *[add published link, tagged #weekendchallenge]*
-- Demo / repository: *[add links before submitting]*
